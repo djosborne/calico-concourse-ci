@@ -1,0 +1,45 @@
+resources:
+- name: libcalico-go
+  type: git
+  source:
+    uri: https://github.com/projectcalico/libcalico-go.git
+- name: calicoctl
+  type: git
+  source:
+    uri: https://github.com/projectcalico/calicoctl.git
+
+jobs:
+- name: libcalico-go-unit
+  plan:
+  - get: libcalico-go
+    trigger: true
+  - task: unit-test
+    config:
+      platform: linux
+      inputs:
+      - name: libcalico-go
+      image_resource:
+        type: docker-image
+        source: {repository: calico/go-build}
+      run:
+        dir: ./libcalico-go
+        path: ./run-uts
+
+- name: calicoctl
+  plan:
+  - get: libcalico-go
+    passed: [libcalico-go-unit]
+  - get: calicoctl
+  - task: build
+    config:
+      platform: linux
+      inputs:
+      - name: libcalico-go
+      image_resource:
+        type: docker-image
+        source: {repository: calico/go-build}
+      run:
+        dir: ./calicoctl
+        path: ./run-uts
+
+        # args: ["libcalico-go"]
