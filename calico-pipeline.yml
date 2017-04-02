@@ -11,10 +11,10 @@ resources:
   type: git
   source:
     uri: https://github.com/projectcalico/calicoctl.git
-- name: calico-node-docker-image
-  type: docker-image
-  source:
-    repository: djosborne/node
+# - name: calico-node-docker-image
+#   type: docker-image
+#   source:
+#     repository: djosborne/node
 
 jobs:
 - name: libcalico-go
@@ -33,7 +33,7 @@ jobs:
         source: {repository: calico/go-build}
       run:
         dir: ./libcalico-go
-        path: ./run-uts
+        path: ../calico-concourse-ci/bin/libcalico-go/run-uts
 
 - name: calicoctl
   plan:

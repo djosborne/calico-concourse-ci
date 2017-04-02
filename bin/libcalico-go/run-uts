@@ -2,6 +2,8 @@
 
 set -e
 
+glide install -strip-vendor
+
 if [ -z $SKIP ]
 then
     SKIP="vendor"
