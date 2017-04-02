@@ -1,4 +1,8 @@
 resources:
+- name: calico-concourse-ci
+  type: git
+  source:
+    uri: https://github.com/djosborne/calico-concourse-ci.git
 - name: libcalico-go
   type: git
   source:
@@ -7,10 +11,16 @@ resources:
   type: git
   source:
     uri: https://github.com/projectcalico/calicoctl.git
+- name: calico-node-docker-image
+  type: docker-image
+  source:
+    repository: djosborne/node
 
 jobs:
-- name: libcalico-go-unit
+- name: libcalico-go
   plan:
+  - get: calico-concourse-ci
+    trigger: true
   - get: libcalico-go
     trigger: true
   - task: unit-test
@@ -28,7 +38,7 @@ jobs:
 - name: calicoctl
   plan:
   - get: libcalico-go
-    passed: [libcalico-go-unit]
+    passed: [libcalico-go]
   - get: calicoctl
   - task: build
     config:
@@ -42,4 +52,9 @@ jobs:
         dir: ./calicoctl
         path: ./run-uts
 
-        # args: ["libcalico-go"]
+# - name: calico-node
+#   plan:
+#   - get: libcalico-go
+#     passed: [libcalico-go]
+#   - put: calico-node-docker-image
+#     params: {build: calico-node-docker-image}
