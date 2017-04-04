@@ -26,8 +26,20 @@ fly -t calico set-pipeline -p calico -c calico-pipeline.yml
 fly -t calico unpause-pipeline -p calico
 ```
 
+## Debug the Job
+
+```
+fly -t calico intercept -j calico/libcalico-go
+```
+
 ## Delete the Traaaack
 
 ```
 fly -t calico destroy-pipeline -p calico
+```
+
+## Trigger a Resource
+
+```
+fly -t calico trigger-job -j calico/libcalico-go
 ```

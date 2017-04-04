@@ -20,20 +20,20 @@ jobs:
 - name: libcalico-go
   plan:
   - get: calico-concourse-ci
-    trigger: true
   - get: libcalico-go
     trigger: true
   - task: unit-test
     config:
       platform: linux
-      inputs:
-      - name: libcalico-go
       image_resource:
         type: docker-image
         source: {repository: calico/go-build}
+      inputs:
+      - name: calico-concourse-ci
+      - name: libcalico-go
+        path: gopath/src/github.com/projectcalico/libcalico-go
       run:
-        dir: ./libcalico-go
-        path: ../calico-concourse-ci/bin/libcalico-go/run-uts
+        path: calico-concourse-ci/bin/libcalico-go/run-uts
 
 - name: calicoctl
   plan:
